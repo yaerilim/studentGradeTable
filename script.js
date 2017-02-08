@@ -8,6 +8,7 @@ function sgtReady() {
     $(".btn-default").click(cancelClicked);
     $('.avgGrade').text(0);
     $(".student-list-container").append("<h3><strong>User Info Unavailable</strong></h3>");
+    $('.btn-primary').click(serverClicked);
     deleteClicked();
     reset();
 }
@@ -26,6 +27,10 @@ function deleteClicked() {
     $('tbody').on('click', 'button', function(){
         removeStudent(event);
     });
+}
+
+function serverClicked() {
+    getFromServer();
 }
 
 function addStudent(){
@@ -94,4 +99,22 @@ function removeStudent(event) {
     rowIndex = rowIndex[0].rowIndex;
     student_array.splice(rowIndex-1,1);
     updateData();
+}
+
+function getFromServer() {
+    $.ajax({
+        url: 'http://s-apis.learningfuze.com/sgt/get',
+        dataType: 'json',
+        method: 'post',
+        data : {api_key: "jdfv5s9ZMx"},
+        success: function(response) {
+            console.log("call success", response);
+            for (var b = 0; b < response.data.length; b++){
+                console.log(response.data[b]);
+                student_array.push(response.data[b]);
+                updateData();
+                $(".student-list-container h3").remove();
+            }
+        }
+    });
 }
