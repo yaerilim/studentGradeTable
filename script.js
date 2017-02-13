@@ -8,7 +8,8 @@ function sgtReady() {
     $(".btn-default").click(cancelClicked);
     $('.avgGrade').text(0);
     $(".student-list-container").append("<h3><strong>User Info Unavailable</strong></h3>");
-    $('.btn-primary').click(serverClicked);
+    // $('.btn-primary').click(serverClicked); // commented out by Charles to activate serverClicked() below
+    serverClicked(); //added by Charles - pulls info from database on document load
     deleteClicked();
     reset();
 }
@@ -42,6 +43,7 @@ function addStudent(){
     student_array.push(student_object);
     updateStudentList();
     $(".student-list-container h3").remove();
+    new_student_data_to_server(student_object); //added by Charles - calls the function to add data to database
 }
 
 function updateStudentList(){
@@ -115,6 +117,26 @@ function getFromServer() {
                 updateData();
                 $(".student-list-container h3").remove();
             }
+        }
+    });
+}
+
+function new_student_data_to_server(student_object) { //added by Charles - adds information to the database
+    $.ajax({
+        url: 'http://s-apis.learningfuze.com/sgt/create',
+        dataType: 'json',
+        method: 'post',
+        data: {
+            api_key: "jdfv5s9ZMx",
+            name: student_object.name,
+            course: student_object.course,
+            grade: student_object.grade
+        },
+        success: function(response) {
+            console.log("response is a success");
+        },
+        error: function(response) {
+            console.log("response failed");
         }
     });
 }
