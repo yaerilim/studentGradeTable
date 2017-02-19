@@ -5,11 +5,11 @@ var student_array = [];
 function sgtReady() {
     console.log('SGT is ready');
     $(".btn-success").click(addClicked);
-    $(".btn-default").click(cancelClicked);
+    $(".btn-default").click(clearAddStudentForm);
     $('.avgGrade').text(0);
     $(".student-list-container").append("<h3><strong>User Info Unavailable</strong></h3>");
     // $('.btn-primary').click(serverClicked); // commented out by Charles to activate serverClicked() below
-    serverClicked(); //added by Charles - pulls info from database on document load
+    getFromServer(); //added by Charles - pulls info from database on document load
     deleteClicked();
     reset();
 }
@@ -20,18 +20,10 @@ function addClicked(){
     updateData();
 }
 
-function cancelClicked(){
-    clearAddStudentForm();
-}
-
 function deleteClicked() {
     $('tbody').on('click', 'button', function(){
         removeStudent(event);
     });
-}
-
-function serverClicked() {
-    getFromServer();
 }
 
 function addStudent(){
@@ -99,6 +91,7 @@ function removeStudent(event) {
     console.log('removeStudent');
     var rowIndex = $(event.target).parents('tr');
     rowIndex = rowIndex[0].rowIndex;
+    delete_student_data_from_server(rowIndex);
     student_array.splice(rowIndex-1,1);
     updateData();
 }
@@ -112,7 +105,6 @@ function getFromServer() {
         success: function(response) {
             console.log("call success", response);
             for (var b = 0; b < response.data.length; b++){
-                console.log(response.data[b]);
                 student_array.push(response.data[b]);
                 updateData();
                 $(".student-list-container h3").remove();
@@ -133,7 +125,27 @@ function new_student_data_to_server(student_object) { //added by Charles - adds 
             grade: student_object.grade
         },
         success: function(response) {
-            console.log("response is a success");
+            console.log("new_student success" , response);
+            student_array[student_array.length-1].id = response.new_id;
+        },
+        error: function(response) {
+            console.log("response failed");
+        }
+    });
+}
+function delete_student_data_from_server(rowIndex) {
+    console.log(rowIndex);
+    $.ajax({
+        url: 'http://s-apis.learningfuze.com/sgt/delete',
+        dataType: 'json',
+        method: 'post',
+        data: {
+            api_key: "jdfv5s9ZMx",
+            student_id: student_array[rowIndex-1].id
+        },
+        success: function(response) {
+            console.log("delete_student success", response);
+
         },
         error: function(response) {
             console.log("response failed");
