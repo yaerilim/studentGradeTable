@@ -10,15 +10,16 @@
 <body>
 <div class="container">
     <div class="page-header">
-        <!-- only show this element when the isnt on mobile -->
+<!--------------------------------- NON-MOBILE VIEW --------------------------------->
         <h1 class="visible-lg"><strong>Student Grade Table</strong>
             <small class="pull-right"><strong>Grade Average : </strong><span class="avgGrade label label-default"></span></small>
         </h1>
-        <!-- only show this element when the user gets to a mobile version -->
-        <h3 class="visible-xs">Student Grade Table
+<!--------------------------------- MOBILE VIEW --------------------------------->
+        <h3 class="visible-xs">Student Grade Table<br>
             <small>Grade Average : <span class="avgGrade label label-default"></span></small>
         </h3>
     </div>
+<!--------------------------------- INFORMATION INPUT AREA --------------------------------->
     <div class="student-add-form col-md-3 pull-right">
         <h4><strong>Add Student</strong></h4>
         <div class="input-group form-group">
@@ -39,10 +40,11 @@
             </span>
             <input type="text" class="form-control" name="studentGrade" id="studentGrade" placeholder="Student Grade">
         </div>
-        <button type="button" class="btn btn-success" onclick="">Add</button>
-        <button type="button" class="btn btn-primary" onclick="">Server Data</button>
-        <button type="button" class="btn btn-default" onclick="">Cancel</button>
+        <button type="button" class="btn btn-default" onclick="cancel()">Cancel</button>
+        <button type="button" class="btn btn-success" onclick="add()">Add</button>
+        <button type="button" class="btn btn-primary" onclick="">Retrieve Data</button>
     </div>
+<!--------------------------------- INFORMATION DISPLAY AREA --------------------------------->
     <div class="student-list-container col-md-9 pull-left">
         <table class="student-list table">
             <thead>
@@ -56,18 +58,6 @@
             <tbody>
             </tbody>
         </table>
-    </div>
-</div>
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <p>Some text in the modal.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
     </div>
 </div>
 </body>
