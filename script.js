@@ -1,24 +1,14 @@
 var fbRef = firebase.database();
 $(document).ready(function() {
-    $('body').keyup(function(event){               //clear input area when 'esc' key pressed
-        if(event.which === 27){
-            cancel();
-        }
-    });
-    $('body').keypress(function(event){               //add input value to table when 'enter' key pressed
-        if(event.which === 13){
-            add();
-        }
-    });
     retrieveData();
 });
-//---------------------------------- CLEAR INPUT AREA ----------------------------------
+//---------------------------------- CLEAR INPUT AREA (CANCEL BUTTON) ----------------------------------
 function cancel(){
     $('#studentName').val('');
     $('#course').val('');
     $('#studentGrade').val('');
 }
-//---------------------------------- ADD INPUT VALUE TO TABLE ----------------------------------
+//---------------------------------- ADD INPUT VALUE TO TABLE (ADD BUTTON) ----------------------------------
 var studentArr = [];
 var studentObj = {};
 function add() {
@@ -60,7 +50,7 @@ function addDataToDom(firebaseObj){
         var nameTd = $('<td>').append(firebaseObj[x].name);
         var courseTd = $('<td>').append(firebaseObj[x].course);
         var gradeTd = $('<td>').append(firebaseObj[x].grade);
-        var editBtn = $('<button>').html('Edit').addClass('btn btn-primary btn-sm').click(editStudent).css("margin-right", "3%");
+        var editBtn = $('<button>').html('Edit').addClass('btn btn-primary btn-sm editBtn').click(openEditInput).css("margin-right", "3%").val(key[0]);
         var deleteBtn = $('<button>').html('Delete').addClass('btn btn-danger btn-sm').click(deleteStudent).val(key[0]);
         key.splice(0,1);
         var buttons = $('<td>').append(editBtn, deleteBtn);
@@ -83,15 +73,49 @@ function calculateAverage(){
         $('.avgGrade').text(averageGrade);
     }
 }
-//---------------------------------- DELETE THE SELECT ROW WHEN BUTTON CLICKED ----------------------------------
+//---------------------------------- DELETE THE SELECT ROW WHEN BUTTON CLICKED (DELETE BUTTON) ----------------------------------
 function deleteStudent(){
     fbRef.ref('students/' + $(this).val()).remove();
     calculateAverage();
 }
-//---------------------------------- EDIT THE INFORMATION ON SELECT ROW WHEN BUTTON CLICKED ----------------------------------
-function editStudent(){
-    console.log('edit');
-    calculateAverage();
+//---------------------------------- EDIT THE INFORMATION ON SELECT ROW WHEN BUTTON CLICKED (EDIT BUTTON) ----------------------------------
+function openEditInput(){
+    var key = $(this).val();
+    var operations = $(this)[0].parentNode;
+    var grade = $(this)[0].parentNode.previousSibling;
+    var gradeValue = $(this)[0].parentNode.previousSibling.innerHTML;
+    var course = $(this)[0].parentNode.previousSibling.previousSibling;
+    var courseValue = $(this)[0].parentNode.previousSibling.previousSibling.innerHTML;
+    var name = $(this)[0].parentNode.previousSibling.previousSibling.previousSibling;
+    var nameValue = $(this)[0].parentNode.previousSibling.previousSibling.previousSibling.innerHTML;
+    $(operations).append($('<button>').addClass("btn btn-default btn-sm saveBtn").css({"width" : "67%", "margin-top":"3%"}).html('Save'));
+    grade.innerHTML = '';
+    $(grade).append($('<input>').addClass("form-control gradeInput").val(gradeValue));
+    course.innerHTML = '';
+    $(course).append($('<input>').addClass("form-control courseInput").val(courseValue));
+    name.innerHTML = '';
+    $(name).append($('<input>').addClass("form-control nameInput").val(nameValue));
+    $('.saveBtn').click(saveClicked);
+    function saveClicked() {
+        $(this).hide();
+        gradeValue = $('.gradeInput').val();
+        $(grade).empty();
+        grade.innerHTML = gradeValue;
+        courseValue = $('.courseInput').val();
+        $(course).empty();
+        course.innerHTML = courseValue;
+        nameValue = $('.nameInput').val();
+        $(name).empty();
+        name.innerHTML = nameValue;
+        updateFB(gradeValue,courseValue,nameValue,key);
+        calculateAverage();
+    }
 }
-
-
+//---------------------------------- UPDATE FIREBASE WITH EDITED INFORMATION ----------------------------------
+function updateFB(gradeValue,courseValue,nameValue,key){
+    fbRef.ref('students/' + key).update({
+        name: nameValue,
+        course: courseValue,
+        grade: gradeValue
+    });
+}
