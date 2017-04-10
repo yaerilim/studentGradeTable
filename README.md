@@ -1,6 +1,6 @@
 # Student Grade Table
 
-A Student Grade Table where user can input, add, and delete student information. Performs CRUD(Creat, Read, Update, and Delete) through Firebase. Styling is only done with Bootstrap. Responsive in mobile view.
+A Student Grade Table where user can add, edit and delete student information. Performs CRUD(Creat, Read, Update, and Delete) through Firebase. Styling is only done with Bootstrap. Responsive in mobile view.
 
  - Javascript
  - JQuery
