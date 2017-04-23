@@ -75,12 +75,13 @@ function calculateAverage(){
 }
 //---------------------------------- DELETE THE SELECT ROW WHEN BUTTON CLICKED (DELETE BUTTON) ----------------------------------
 function deleteStudent(){
+    $('.editBtn').prop('disabled', false);
     fbRef.ref('students/' + $(this).val()).remove();
     calculateAverage();
 }
 //---------------------------------- EDIT THE INFORMATION ON SELECT ROW WHEN BUTTON CLICKED (EDIT BUTTON) ----------------------------------
 function openEditInput(){
-    $('.editBtn').off();
+    $('.editBtn').prop('disabled', true);
     var key = $(this).val();
     var operations = $(this)[0].parentNode;
     var grade = $(this)[0].parentNode.previousSibling;
@@ -98,7 +99,7 @@ function openEditInput(){
     $(name).append($('<input>').addClass("form-control nameInput").val(nameValue));
     $('.saveBtn').click(saveClicked);
     function saveClicked() {
-        $('.editBtn').on();
+        $('.editBtn').prop('disabled', false);
         $(this).hide();
         gradeValue = $('.gradeInput').val();
         $(grade).empty();
