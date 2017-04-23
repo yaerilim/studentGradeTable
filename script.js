@@ -80,6 +80,7 @@ function deleteStudent(){
 }
 //---------------------------------- EDIT THE INFORMATION ON SELECT ROW WHEN BUTTON CLICKED (EDIT BUTTON) ----------------------------------
 function openEditInput(){
+    $('.editBtn').off();
     var key = $(this).val();
     var operations = $(this)[0].parentNode;
     var grade = $(this)[0].parentNode.previousSibling;
@@ -97,6 +98,7 @@ function openEditInput(){
     $(name).append($('<input>').addClass("form-control nameInput").val(nameValue));
     $('.saveBtn').click(saveClicked);
     function saveClicked() {
+        $('.editBtn').on();
         $(this).hide();
         gradeValue = $('.gradeInput').val();
         $(grade).empty();
